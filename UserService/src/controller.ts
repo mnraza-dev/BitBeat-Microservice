@@ -18,7 +18,7 @@ export const registerUser = TryCatch(async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     user = await User.create({ name, email, password: hashedPassword });
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, { expiresIn: "7d" });
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET as string, { expiresIn: "7d" });
     res.json({
         message: "User registered successfully",
         data: {
@@ -46,7 +46,7 @@ export const loginUser = TryCatch(async (req, res) => {
         })
         return;
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, { expiresIn: "7d" });
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET as string, { expiresIn: "7d" });
 
     res.json({
         message: "User Login successfully",

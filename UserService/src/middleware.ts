@@ -3,35 +3,44 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import User, { IUser } from "./model";
 
 interface CustomJwtPayload extends JwtPayload {
-    _id: string;
+  _id: string;
 }
+
 export interface AuthenticatedRequest extends Request {
-    user?: IUser | null
+  user?: IUser | null;
 }
-export const isAuth = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
-    try {
-        const authHeader = req.headers.authorization;
-        const token = authHeader && authHeader.split(" ")[1];
 
-        if (!token) {
-            res.status(403).json({ message: "Not authorized" });
-            return;
-        }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as CustomJwtPayload;
+export const isAuth = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const authHeader = req.headers.authorization;
 
-        if (!decoded || !decoded._id) {
-            res.status(403).json({ message: "Invalid Token !" });
-            return;
-        }
-        const userId = decoded._id;
-        const user = await User.findById(userId).select("-password");
-        if (!user) {
-            res.status(403).json({ message: "User not found" });
-            return;
-        }
-        req.user = user;
-        next();
-    } catch (error) {
-        res.status(403).json({ message: "Not authorized" });
+    if (!authHeader?.startsWith("Bearer ")) {
+      res.status(403).json({ message: "Invalid token format" });
+      return;
     }
-}
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as CustomJwtPayload;
+
+    if (!decoded || !decoded._id) {
+      res.status(403).json({ message: "Invalid token!" });
+      return;
+    }
+
+    const user = await User.findById(decoded._id).select("-password");
+    if (!user) {
+      res.status(403).json({ message: "User not found" });
+      return;
+    }
+
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error("Auth Error:", error);
+    res.status(403).json({ message: "Not authorized" });
+  }
+};
