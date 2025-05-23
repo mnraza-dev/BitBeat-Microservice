@@ -25,7 +25,7 @@ const userSchema: Schema<User> = new mongoose.Schema({
     role: {
         type: String,
         enum: ["user", "admin"],
-        required: true,
+        default: "user",
     },
     playlist: [
         {
@@ -33,8 +33,8 @@ const userSchema: Schema<User> = new mongoose.Schema({
             required: true
         },
     ]
-},{ timestamps: true });
+}, { timestamps: true });
 
 const User = mongoose.model<User>("User", userSchema);
 
-export default User ;
+export default User;

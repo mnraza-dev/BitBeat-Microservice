@@ -9,7 +9,8 @@ const port = process.env.PORT || 4000;
 app.use(express.json());
 
 app.use("/api/v1/", userRoutes);
+
 app.listen(port, () => {
-connectDB();
+    connectDB();
     console.log(`Server running at http://localhost:${port}`);
 });
