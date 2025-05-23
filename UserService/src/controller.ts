@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import TryCatch from "./TryCatch";
 import User from "./model.js";
+import { AuthenticatedRequest } from "./middleware";
 
 
 export const registerUser = TryCatch(async (req, res) => {
@@ -46,12 +47,22 @@ export const loginUser = TryCatch(async (req, res) => {
         return;
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, { expiresIn: "7d" });
-   
+
     res.json({
         message: "User Login successfully",
         data: {
             user,
             token
+        }
+    })
+})
+
+export const myProfile = TryCatch(async (req: AuthenticatedRequest, res) => {
+    const user = req.user
+    res.json({
+        message: "My Profile",
+        data: {
+            user
         }
     })
 })
