@@ -1,11 +1,11 @@
-import mongoose, { Schema , Document} from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
 interface User extends mongoose.Document {
     name: string;
     email: string;
     password: string;
-    role:string,
-    playlist:string[]
+    role: string,
+    playlist: string[]
 }
 
 const userSchema: Schema<User> = new mongoose.Schema({
@@ -24,10 +24,13 @@ const userSchema: Schema<User> = new mongoose.Schema({
     },
     role: {
         type: String,
+        enum: ["user", "admin"],
         required: true,
     },
-    playlist: {
-        type: [String],
-        required: true,
-    },
+    playlist: [
+        {
+            type: String,
+            required: true
+        },
+    ]
 });
