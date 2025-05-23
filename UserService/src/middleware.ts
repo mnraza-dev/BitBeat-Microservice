@@ -3,9 +3,9 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import User, { IUser } from "./model";
 
 export interface AuthenticatedRequest extends Request {
-    user?: IUser
+    user?: IUser | null
 }
-export const isAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const isAuth = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
         const token = req.headers.token as string;
         if (!token) {
