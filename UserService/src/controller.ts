@@ -27,21 +27,27 @@ export const registerUser = TryCatch(async (req, res) => {
     })
 })
 
-export const registerUser = TryCatch(async (req, res) => {
-    const { name, email, password } = req.body
+export const loginUser = TryCatch(async (req, res) => {
+    const {  email, password } = req.body
     let user = await User.findOne({ email });
-    if (user) {
+
+    if (!user) {
         res.status(400).json({
-            message: "User already exists"
+            message: "User not found"
         })
         return;
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const isMatch = await bcrypt.compare(password, user.password);
 
-    user = await User.create({ name, email, password: hashedPassword });
+    if (!isMatch) {
+        res.status(400).json({
+            message: "Invalid credentials"
+        })
+        return;
+    }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, { expiresIn: "7d" });
     res.json({
-        message: "User registered successfully",
+        message: "User Login successfully",
         data: {
             user,
             token
