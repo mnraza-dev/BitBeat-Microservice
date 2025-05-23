@@ -46,12 +46,7 @@ export const loginUser = TryCatch(async (req, res) => {
         return;
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, { expiresIn: "7d" });
-    if (!token) {
-        res.status(400).json({
-            message: "Please Login !"
-        })
-        return;
-    }
+   
     res.json({
         message: "User Login successfully",
         data: {
