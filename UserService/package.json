@@ -2,9 +2,9 @@
   "name": "user-service",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "dev": "nodemon src/index.ts"
+    "dev": "tsc && nodemon dist/index.js"
   },
   "keywords": [],
   "author": "",
