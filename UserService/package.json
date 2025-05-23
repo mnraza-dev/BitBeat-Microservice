@@ -4,10 +4,13 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "tsc && nodemon dist/index.js"
+    "dev": "concurrently \"tsc -w\" \" nodemon dist/index.js\"",
+    "start": "node dist/index.js",
+    "build": "tsc"
+
   },
   "keywords": [],
-  "author": "",
+  "author": "MN Raza",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^3.1.10",
