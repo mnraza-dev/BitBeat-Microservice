@@ -1,9 +1,9 @@
 import { Router } from "express";
+import { loginUser, registerUser } from "./controller";
 
 const router = Router();
 
-router.get('/', (req, res) => {
-    res.send('Hello World!');
-})
+router.post('/user/register', registerUser)
+router.post('/user/login', loginUser)
 
 export default router
